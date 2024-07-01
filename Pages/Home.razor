@@ -9,11 +9,12 @@ Welcome to your new app.
 @code{
 
 
-    public string HelloMessage { get; set; }
+    public string? HelloMessage { get; set; }
 
     protected override void OnInitialized()
     {
-        HelloMessage = config["helloMessage"];
+        //HelloMessage = config["helloMessage"];
+        HelloMessage = config.GetValue<string>("helloMessage");
     }
 
 }

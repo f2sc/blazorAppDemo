@@ -1,6 +1,7 @@
 ﻿//namespace blazorAppDemo.Models.Services
 using blazorAppDemo;
 using blazorAppDemo.Models;
+using blazorAppDemo.Pages;
 using System.ComponentModel;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -13,10 +14,10 @@ namespace blazorAppDemo
 
         private readonly JsonSerializerOptions options;
 
-        public ProductService(HttpClient httpClient, JsonSerializerOptions optionsJson)
+        public ProductService(HttpClient httpClient)
         {
             client = httpClient;
-            options = optionsJson;
+            options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
         public async Task<List<Product>?> get()
@@ -28,7 +29,34 @@ namespace blazorAppDemo
             {
                 throw new ApplicationException(content);
             }
-            return JsonSerializer.Deserialize<List<Product>>(content, options);
+            var products = JsonSerializer.Deserialize<List<Product>>(content, options);
+
+            // Verificar y decodificar las URLs de las imágenes si es necesario
+            if (products != null)
+            {
+                foreach (var product in products)
+                {
+                    if (product.Images != null && product.Images.Length > 0)
+                    {
+                        product.Images = DecodeImages(product.Images);
+                    }
+                }
+            }
+
+            return products;
+        }
+
+        private string[] DecodeImages(string[] images)
+        {
+            // Las imágenes vienen como un JSON string, por lo tanto, decodificamos el primer elemento y deserializamos
+            if (images.Length > 0)
+            {
+                var imagesJsonString = string.Join(",", images);
+                var decodedImages = JsonSerializer.Deserialize<string[]>(imagesJsonString);
+                return decodedImages.Select(url => System.Net.WebUtility.HtmlDecode(url)).ToArray();
+            }
+
+            return images;
         }
 
         public async Task Delete(int idProduct)

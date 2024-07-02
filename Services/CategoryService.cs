@@ -10,10 +10,10 @@ namespace blazorAppDemo
 
         private readonly JsonSerializerOptions options;
 
-        public CategoryService(HttpClient httpClient, JsonSerializerOptions optionsJson)
+        public CategoryService(HttpClient httpClient)
         {
             client = httpClient;
-            options = optionsJson;
+            options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         }
 
         public async Task<List<Category>?> get()

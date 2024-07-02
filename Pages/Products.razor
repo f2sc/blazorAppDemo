@@ -1,0 +1,45 @@
+﻿@page "/product"
+@inject HttpClient Http
+@inject ILogger<Product> logger;
+@inject IProductService productService;
+
+<PageTitle>Productos</PageTitle>
+
+<ModuleTitle Title="Productos" />
+
+@if (products?.Count > 0)
+{
+    <div class="products-container">
+        @foreach (var product in products)
+        {
+            <div class="card">
+                <img class="card-img-top" src="@product.Images.First()" alt="product" loading="lazy" />
+                <div class="card-body">
+                    <h4>@product.Title</h4>
+                    <p>@product.Price?.ToString("C")</p>
+                    @* <button title="Eliminar" class="btn btn-danger btn-delete" @onclick="@(() => Delete(product.Id))"></button> *@
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No hay productos para mostrar</p>
+}
+
+@code {
+    private List<Product>? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await GetProducts();
+    }
+
+    private async Task<List<Product>> GetProducts()
+    {
+        return await productService.get();
+    }
+
+    
+}

@@ -1,9 +1,9 @@
 ﻿//namespace blazorAppDemo.Models.Services
 using blazorAppDemo;
-using blazorAppDemo.Models;
 using blazorAppDemo.Pages;
 using System.ComponentModel;
 using System.Net.Http.Json;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 
 namespace blazorAppDemo
@@ -60,6 +60,26 @@ namespace blazorAppDemo
             return images;
         }
 
+        public string LimpiaURL(string imageURL)
+        {
+            if (imageURL != string.Empty)
+            {
+                imageURL = imageURL.Replace('[',new char() ).Replace(']', new char()).Replace('"', new char());
+            }
+            return imageURL;
+        }
+
+        public string[] LimpiaURL(string[] imagenesURL)
+        {
+            List<string> imagenesURLLimpias = new List<string>();
+            foreach (string url in imagenesURL)
+            {
+                imagenesURLLimpias.Add(LimpiaURL(url));
+            }
+            
+            return imagenesURLLimpias.ToArray();
+        }
+
         public async Task Delete(int idProduct)
         {
             var response = await client.DeleteAsync($"v1/products/{idProduct}");
@@ -72,12 +92,14 @@ namespace blazorAppDemo
 
         public async Task Add(Product product)
         {
-            var response = await client.PostAsync("v1/products/", JsonContent.Create(product));
-            var content = await response.Content.ReadAsStringAsync();
-            if (!response.IsSuccessStatusCode)
-            {
-                throw new ApplicationException(content);
-            }
+            product.Images = LimpiaURL(product.Images);
+            JsonContent jc = JsonContent.Create(product);
+            //var response = await client.PostAsync("v1/products/", JsonContent.Create(product));
+            //var content = await response.Content.ReadAsStringAsync();
+            //if (!response.IsSuccessStatusCode)
+            //{
+            //    throw new ApplicationException(content);
+            //}
         }
 
         //public async Task Update(Product product) 
@@ -96,4 +118,6 @@ public interface IProductService
     Task Delete(int idProduct);
 
     Task Add(Product product);
+
+    string LimpiaURL(string imageURL);
 }

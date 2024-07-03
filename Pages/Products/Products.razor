@@ -16,7 +16,7 @@
         @foreach (var product in products)
         {
             <div class="card">
-                <img class="card-img-top" src="@product.Images.First()" alt="product" loading="lazy" />
+                <img class="card-img-top" src="@productService.LimpiaURL(product.Images.First())" alt="product" loading="lazy" />
                 <div class="card-body">
                     <h4>@product.Title</h4>
                     <p>@product.Price?.ToString("C")</p>

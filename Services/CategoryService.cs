@@ -1,5 +1,5 @@
 ﻿//namespace blazorAppDemo.Models.Services
-using blazorAppDemo.Models;
+using blazorAppDemo;
 using System.Text.Json;
 
 namespace blazorAppDemo

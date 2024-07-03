@@ -1,5 +1,5 @@
 ﻿//namespace blazorAppDemo.Models
-namespace blazorAppDemo.Models
+namespace blazorAppDemo
 {
     public class Category
     {

@@ -7,16 +7,70 @@
 <ModuleTitle Title="Añadir nuevo producto"></ModuleTitle>
 
 <button class="btn btn-dark" @onclick="@(() => navigationManager.NavigateTo("/product"))" >Listado de productos</button>
-<EditForm Model="@producto">
+<EditForm Model="@producto" OnSubmit="@save">
     <div class="row">
         <div class="col-8 form-group">
             <label for="title" class="col-form-label">Title</label>
             <InputText id="title" @bind-Value="producto.Title" required class="form-control"></InputText>
         </div>
     </div>
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="price" class="col-form-label">Price</label>
+            <InputNumber id="price" @bind-Value="producto.Price" required class="form-control"></InputNumber>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="descripcion" class="col-form-label">Description</label>
+            <InputTextArea id="descripcion" @bind-Value="producto.Description" required class="form-control"></InputTextArea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="category" class="col-form-label">Categoría</label>
+            <InputSelect id="category" class="form-control" @bind-Value="producto.CategoryId" required>
+                <option value="0">Seleccione un registro</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </InputSelect>
+            @* <select id="category" class="form-control" required>
+                <option value="0">Seleccione un registro</option>
+                @foreach (var category in categories)
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select> *@
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-8 form-group">
+            <label for="image" class="col-form-label">Imagen</label>
+            <InputText id="image" @bind-Value="@producto.Image" required class="form-control"></InputText>
+        </div>
+    </div>
+    <hr />
+    <button type="submit" class="btn btn-primary">Enviar</button>
 </EditForm>
 
 @code {
     private Product producto = new Product();
+
+    private List<Category>? categories = new List<Category>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await categoryService.get();
+    }
+
+    private async Task save()
+    {
+        producto.Images = new string[1] { producto.Image };
+
+        await productService.Add(producto);
+        navigationManager.NavigateTo("/product");
+    }
 
 }

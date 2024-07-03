@@ -29,21 +29,22 @@ namespace blazorAppDemo
             {
                 throw new ApplicationException(content);
             }
-            var products = JsonSerializer.Deserialize<List<Product>>(content, options);
+            return JsonSerializer.Deserialize<List<Product>>(content, options);
+            //var products = JsonSerializer.Deserialize<List<Product>>(content, options);
 
-            // Verificar y decodificar las URLs de las imágenes si es necesario
-            if (products != null)
-            {
-                foreach (var product in products)
-                {
-                    if (product.Images != null && product.Images.Length > 0)
-                    {
-                        product.Images = DecodeImages(product.Images);
-                    }
-                }
-            }
+            //// Verificar y decodificar las URLs de las imágenes si es necesario
+            //if (products != null)
+            //{
+            //    foreach (var product in products)
+            //    {
+            //        if (product.Images != null && product.Images.Length > 0)
+            //        {
+            //            product.Images = DecodeImages(product.Images);
+            //        }
+            //    }
+            //}
 
-            return products;
+            //return products;
         }
 
         private string[] DecodeImages(string[] images)

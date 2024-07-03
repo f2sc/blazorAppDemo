@@ -2,10 +2,13 @@
 @inject HttpClient Http
 @inject ILogger<Product> logger;
 @inject IProductService productService;
+@inject NavigationManager navigationManager 
+
 
 <PageTitle>Productos</PageTitle>
 
 <ModuleTitle Title="Productos" />
+<button class="btn btn-dark" @onclick="@(() => navigationManager.NavigateTo("/addproduct"))" >Nuevo producto</button>
 
 @if (products?.Count > 0)
 {
